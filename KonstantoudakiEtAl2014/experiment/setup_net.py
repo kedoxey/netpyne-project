@@ -39,66 +39,65 @@ rscells = 1
 iscells = 1
 
 netParams = specs.NetParams()  # object of class NetParams to store the network parameters
-simConfig = specs.SimConfig() 
+simConfig = specs.SimConfig()
+
+netParams.popParams['PYR_pop'] = {'cellModel': 'PYR_cell', 'cellType': 'PYR',  'numCells': pcells}
+netParams.popParams['FSin_pop'] = {'cellModel': 'FS_cell', 'cellType': 'FSin',  'numCells': fscells}
+netParams.popParams['RSin_pop'] = {'cellModel': 'RS_cell', 'cellType': 'RSin',  'numCells': rscells}
+netParams.popParams['ISin_pop'] = {'cellModel': 'IS_cell', 'cellType': 'ISin',  'numCells': iscells}
 
 netParams.importCellParams(
         label='PYR',
-        conds={'cellType': 'PYR', 'cellModel': 'Pcell'},
+        conds={'cellType': 'PYR', 'cellModel': 'PYR_cell'},
         fileName='pfc_pc_temp.hoc',
         cellName='Pcell',
         importSynMechs=True)
 
 netParams.importCellParams(
         label='FSin',
-        conds={'cellType': 'FSin', 'cellModel': 'INcell'},
+        conds={'cellType': 'FSin', 'cellModel': 'FS_cell'},
         fileName='incell.hoc',
         cellName='INcell',
         importSynMechs=True)
 
 netParams.importCellParams(
         label='RSin',
-        conds={'cellType': 'RSin', 'cellModel': 'CBcell'},
+        conds={'cellType': 'RSin', 'cellModel': 'RS_cell'},
         fileName='cb.hoc',
         cellName='CBcell',
         importSynMechs=True)
 
 netParams.importCellParams(
         label='ISin',
-        conds={'cellType': 'ISin', 'cellModel': 'CRcell'},
+        conds={'cellType': 'ISin', 'cellModel': 'IS_cell'},
         fileName='cr.hoc',
         cellName='CRcell',
         importSynMechs=True)
 
 print(netParams.cellParams.keys())
 
-netParams.popParams['PYR_pop'] = {'cellModel': 'Pcell', 'cellType': 'PYR',  'numCells': pcells}
-netParams.popParams['FSin_pop'] = {'cellModel': 'INcell', 'cellType': 'FSin',  'numCells': fscells}
-netParams.popParams['RSin_pop'] = {'cellModel': 'CBcell', 'cellType': 'RSin',  'numCells': rscells}
-netParams.popParams['ISin_pop'] = {'cellModel': 'CRcell', 'cellType': 'ISin',  'numCells': iscells}
-
-netParams.synMechParams['AMPA'] = {'mod': 'GLU', 'Cmax': 1.0, 'Cdur': 0.3, 'Alpha': 10, 'Beta': 0.11, 'Erev': 0}
-netParams.synMechParams['AMPAIN'] = {'mod': 'GLUIN', 'Cmax': 1.0, 'Cdur': 0.3, 'Alpha': 10, 'Beta': 0.18, 'Erev': 0}
-netParams.synMechParams['GABAA'] = {'mod': 'GABAa', 'Cmax': 1.0, 'Cdur': 1.0, 'Alpha': 5, 'Beta': 0.18, 'Erev': -80}
-netParams.synMechParams['GABAIN'] = {'mod': 'GABAain', 'Cmax': 1.0, 'Cdur': 1.0, 'Alpha': 5, 'Beta': 0.18, 'Erev': -80}
-netParams.synMechParams['NMDA'] = {'mod': 'NMDA', 'Cmax': 1.0, 'Cdur': 0.3, 'Alpha': 4, 'Beta': 0.015, 'e': 0, 'mg': 1.0}
-netParams.synMechParams['NMDAIN'] = {'mod': 'NMDAIN', 'Cmax': 1.0, 'Cdur': 0.3, 'Alpha': 4, 'Beta': 0.02, 'e': 0, 'mg': 1.0}
-netParams.synMechParams['GABAB'] = {'mod': 'GABAb', 'Cmax': 10, 'Cdur': 10, 'Alpha': 0.001, 'Beta': 0.0047, 'Erev': -80}
+netParams.synMechParams['AMPA'] = {'mod': 'GLU'}
+netParams.synMechParams['AMPAIN'] = {'mod': 'GLUIN'}
+netParams.synMechParams['GABAA'] = {'mod': 'GABAa'}
+netParams.synMechParams['GABAIN'] = {'mod': 'GABAain'}
+netParams.synMechParams['NMDA'] = {'mod': 'NMDA'}
+netParams.synMechParams['NMDAIN'] = {'mod': 'NMDAIN'}
+netParams.synMechParams['GABAB'] = {'mod': 'GABAb'}
 
 netParams.defaultThreshold = -20
 
 # autapses
 # ampa random seed = 3, nmda random seed = 124
-netParams.connParams['autapses'] = {
-        'preConds': {'pop': 'PYR_pop'},
-        'postConds': {'pop': 'PYR_pop'},
-        'sec': 'dend_0',
-        'synMech': ['AMPA', 'NMDA'],
-        'weight': [ampaweight, nmdaweight],
-        'delay': [5, 5],  # ['normal(0.96, 0.11)','normal(1.33, 0.13)'],
-        'probability': maxsyn / (pcells * pcells),
-        'connList': [[0, 0], [1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9],
-                     [10, 10], [11, 11], [12, 12], [13, 13], [14, 14], [15, 15]]
-}
+# netParams.connParams['autapses'] = {
+#         'preConds': {'pop': 'PYR_pop'},
+#         'postConds': {'pop': 'PYR_pop'},
+#         'sec': 'dend_0',
+#         'synMech': ['AMPA', 'NMDA'],
+#         'weight': [ampaweight, nmdaweight],
+#         'delay': [5, 5],  # ['normal(0.96, 0.11)','normal(1.33, 0.13)'],
+#         'connList': [[0, 0], [1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9],
+#                      [10, 10], [11, 11], [12, 12], [13, 13], [14, 14], [15, 15]]
+# }
 
 # PC-PC
 # in net.hoc, $1 = 0
@@ -253,6 +252,6 @@ simConfig.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}}
 simConfig.recordStep = 1
 simConfig.savePickle = False
 simConfig.analysis['plotRaster'] = {'orderInverse': True, 'saveFig': 'tut_import_raster.png'} 
-simConfig.analysis['plotTraces'] = {'include': ['pyr_pop']}   
+simConfig.analysis['plotTraces'] = {'include': ['PYR_pop']}
 
 sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)
