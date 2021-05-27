@@ -89,191 +89,190 @@ netParams.defaultThreshold = -20
 
 # autapses
 # ampa random seed = 3, nmda random seed = 124
-random.seed(3)
-ampa_delay = random.gauss(0.96, 0.11)
-random.seed(124)
-nmda_delay = random.gauss(1.33, 0.13)
-netParams.connParams['autapses'] = {
-        'preConds': {'pop': 'PYR_pop'},
-        'postConds': {'pop': 'PYR_pop'},
-        'sec': 'dend_0',
-        'synMech': ['AMPA', 'NMDA'],
-        # 'weight': list(repeat([list(repeat(ampaweight, automaxsyn)), list(repeat(nmdaweight, automaxsyn))], 16)),
-        'weight': list(repeat([ampaweight, nmdaweight], 16)),
-        'synsPerConn': automaxsyn,
-        # 'delay': list(repeat([list(repeat(random.gauss(0.96, 0.11), automaxsyn)),
-        #                         list(repeat(random.gauss(1.33, 0.13), automaxsyn))], 16)),
-        'delay': list(repeat(['normal(0.96, 0.11)', 'normal(1.33, 0.13)'], 16)),
-        # 'delay': list(repeat([ampa_delay, nmda_delay], 16)),
-        'connList': [[0, 0], [1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9],
-                     [10, 10], [11, 11], [12, 12], [13, 13], [14, 14], [15, 15]]
-}
+# netParams.connParams['autapses'] = {
+#         'preConds': {'pop': 'PYR_pop'},
+#         'postConds': {'pop': 'PYR_pop'},
+#         'sec': 'dend_0',
+#         'synMech': ['AMPA', 'NMDA'],
+#         # 'weight': list(repeat([list(repeat(ampaweight, automaxsyn)), list(repeat(nmdaweight, automaxsyn))], 16)),
+#         'weight': list(repeat([ampaweight, nmdaweight], 16)),
+#         'synsPerConn': automaxsyn,
+#         # 'delay': list(repeat([list(repeat(random.gauss(0.96, 0.11), automaxsyn)),
+#         #                         list(repeat(random.gauss(1.33, 0.13), automaxsyn))], 16)),
+#         'delay': list(repeat(['normal(0.96, 0.11)', 'normal(1.33, 0.13)'], 16)),
+#         # 'delay': list(repeat([ampa_delay, nmda_delay], 16)),
+#         'connList': [[0, 0], [1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9],
+#                      [10, 10], [11, 11], [12, 12], [13, 13], [14, 14], [15, 15]]
+# }
 
-# PC-PC
-# in net.hoc, $1 = 0
-# ampa random seed = 3, nmda random seed = 124
-netParams.connParams['PYR-> PYR'] = {  # S -> M
+# -------------------- PC-PC AMPA --------------------
+netParams.connParams['PYR->PYR-AMPA'] = {
         'preConds': {'pop': 'PYR_pop'},
         'postConds': {'pop': 'PYR_pop'},
         'sec': 'dend_0',
-        'synMech': ['AMPA', 'NMDA'],
-        # 'weight': [list(repeat(ampaweight, maxsyn)), list(repeat(nmdaweight, maxsyn))],
-        'weight': [ampaweight, nmdaweight],
+        'synMech': 'AMPA',
+        'weight': ampaweight,
         'synsPerConn': maxsyn,
-        # 'delay': [5, 5],
-        # 'delay': [list(repeat(random.gauss(0.96, 0.11), maxsyn)), list(repeat(random.gauss(1.33, 0.13), maxsyn))]
-        # 'delay': ['normal(0.96, 0.11)', 'normal(1.33, 0.13)']
-        'delay': [ampa_delay, nmda_delay]
+        'delay': 'normal(0.96, 0.11)'
+}
+# -------------------- PC-PC NMDA --------------------
+netParams.connParams['PYR-> PYR-NMDA'] = {
+        'preConds': {'pop': 'PYR_pop'},
+        'postConds': {'pop': 'PYR_pop'},
+        'sec': 'dend_0',
+        'synMech': 'NMDA',
+        'weight': nmdaweight,
+        'synsPerConn': maxsyn,
+        'delay': 'normal(1.33, 0.13)'
 }
 
-# IN-IN
-# random seed = -100
-random.seed(-100)
-gabain_delay = random.gauss(1.76, 0.07)
+# -------------------- IN-IN --------------------
 netParams.connParams['FSin->FSin'] = {
         'preConds': {'pop': 'FSin_pop'},
         'postConds': {'pop': 'FSin_pop'},
         'sec': 'soma',
-        'synMech': ['GABAIN'],
-        # 'weight': list(repeat(autogabaweight, maxsyn1)),
+        'synMech': 'GABAIN',
         'weight': autogabaweight,
         'synsPerConn': maxsyn1,
-        # 'delay': [5],
-        # 'delay': list(repeat(random.gauss(1.76, 0.07), maxsyn1))
         'delay': 'normal(1.76, 0.07)'
-        # 'delay': gabain_delay
 }
 
-# PC-IN
-# random seed = 0
-random.seed(0)
-ampain_delay = random.gauss(0.6, 0.2)
-nmdain_delay = random.gauss(0.6, 0.2)
-netParams.connParams['PYR->FSin'] = {
+# -------------------- PC-IN AMPAin --------------------
+netParams.connParams['PYR->FSin-AMPAin'] = {
         'preConds': {'pop': 'PYR_pop'},
         'postConds': {'pop': 'FSin_pop'},
         'sec': 'dend',
-        'synMech': ['AMPAIN', 'NMDAIN'],
-        # 'weight': [list(repeat(ampaweightin, maxsyn2)), list(repeat(nmdaweightin, maxsyn2))],
-        'weight': [ampaweightin, nmdaweightin],
+        'synMech': 'AMPAIN',
+        'weight': ampaweightin,
         'synsPerConn': maxsyn2,
-        # 'delay': [5, 5],
-        # 'delay': [list(repeat(random.gauss(0.6, 0.2), maxsyn2)), list(repeat(random.gauss(0.6, 0.2), maxsyn2))]
-        # 'delay': ['normal(0.6, 0.2)', 'normal(0.6, 0.2)']
-        'delay': [ampain_delay, nmdain_delay]
+        'delay': 'normal(0.6, 0.2)'
+}
+# -------------------- PC-IN NMDAin --------------------
+netParams.connParams['PYR->FSin-NMDAin'] = {
+        'preConds': {'pop': 'PYR_pop'},
+        'postConds': {'pop': 'FSin_pop'},
+        'sec': 'dend',
+        'synMech': 'NMDAIN',
+        'weight': nmdaweightin,
+        'synsPerConn': maxsyn2,
+        'delay': 'normal(0.6, 0.2)'
 }
 
-# IN-PC soma
-# random seed = 0
-netParams.connParams['FSin->PYR'] = {
+# -------------------- IN-PC soma GABAa --------------------
+netParams.connParams['FSin->PYR-GABAa'] = {
         'preConds': {'pop': 'FSin_pop'},
         'postConds': {'pop': 'PYR_pop'},
         'sec': 'soma',
-        'synMech': ['GABAA', 'GABAB'],
-        # 'weight': [list(repeat(gabaweight, maxsyn3)), list(repeat(gabaweightb, maxsyn3))],
-        'weight': [gabaweight, gabaweightb],
+        'synMech': 'GABAA',
+        'weight': gabaweight,
         'synsPerConn': maxsyn3,
-        # 'delay': [5, 5],
-        # 'delay': [list(repeat(random.gauss(1.8, 0.8), maxsyn3)), list(repeat(random.gauss(1.8, 0.8), maxsyn3))]
-        # 'delay': ['normal(1.8, 0.8)', 'normal(1.8, 0.8)']
-        'delay': [random.gauss(1.8, 0.8), random.gauss(1.8, 0.8)]
+        'delay': 'normal(1.8, 0.8)'
+}
+# -------------------- IN-PC soma GABAb --------------------
+netParams.connParams['FSin->PYR-GABAb'] = {
+        'preConds': {'pop': 'FSin_pop'},
+        'postConds': {'pop': 'PYR_pop'},
+        'sec': 'soma',
+        'synMech': 'GABAB',
+        'weight': gabaweightb,
+        'synsPerConn': maxsyn3,
+        'delay': 'normal(1.8, 0.8)'
 }
 
-# IN-PC dend1
-# random seed = 0
-netParams.connParams['FSin->PYR'] = {
+# -------------------- IN-PC dend1 GABAa --------------------
+netParams.connParams['FSin->PYR-GABAa'] = {
         'preConds': {'pop': 'FSin_pop'},
         'postConds': {'pop': 'PYR_pop'},
         'sec': 'dend_1',
-        'synMech': ['GABAA', 'GABAB'],
-        # 'weight': [list(repeat(gabaweight, maxsyn4)), list(repeat(gabaweightb, maxsyn4))],
-        'weight': [gabaweight, gabaweightb],
+        'synMech': 'GABAA',
+        'weight': gabaweight,
         'synsPerConn': maxsyn4,
-        # 'delay': [5, 5],
-        # 'delay': [list(repeat(random.gauss(1.8, 0.8), maxsyn4)), list(repeat(random.gauss(1.8, 0.8), maxsyn4))]
-        # 'delay': ['normal(1.8, 0.8)', 'normal(1.8, 0.8)']
-        'delay': [random.gauss(1.8, 0.8), random.gauss(1.8, 0.8)]
+        'delay': 'normal(1.8, 0.8)'
+}
+# -------------------- IN-PC dend1 GABAb --------------------
+netParams.connParams['FSin->PYR-GABAb'] = {
+        'preConds': {'pop': 'FSin_pop'},
+        'postConds': {'pop': 'PYR_pop'},
+        'sec': 'dend_1',
+        'synMech': 'GABAB',
+        'weight': gabaweightb,
+        'synsPerConn': maxsyn4,
+        'delay': 'normal(1.8, 0.8)'
 }
 
-# PC-CB
-# random seed = 0
-netParams.connParams['PYR->RSin'] = {
+# -------------------- PC-CB AMPAin --------------------
+netParams.connParams['PYR->RSin-AMPAin'] = {
         'preConds': {'pop': 'PYR_pop'},
         'postConds': {'pop': 'RSin_pop'},
         'sec': 'dend',
-        'synMech': ['AMPAIN', 'NMDA'],
-        # 'weight': [list(repeat(ampaweightcb, maxsyn5)), list(repeat(nmdaweightcb, maxsyn5))],
-        'weight': [ampaweightcb, nmdaweightcb],
+        'synMech': 'AMPAIN',
+        'weight': ampaweightcb,
         'synsPerConn': maxsyn5,
-        # 'delay': [5, 5],
-        # 'delay': [list(repeat(random.gauss(0.6, 0.2), maxsyn5)), list(repeat(random.gauss(0.6, 0.2), maxsyn5))]
-        # 'delay': ['normal(0.6, 0.2)', 'normal(0.6, 0.2)']
-        'delay': [ampain_delay, nmdain_delay]
+        'delay': 'normal(0.6, 0.2)'
+}
+# -------------------- PC-CB NMDA --------------------
+netParams.connParams['PYR->RSin-NMDA'] = {
+        'preConds': {'pop': 'PYR_pop'},
+        'postConds': {'pop': 'RSin_pop'},
+        'sec': 'dend',
+        'synMech': 'NMDA',
+        'weight': nmdaweightcb,
+        'synsPerConn': maxsyn5,
+        'delay': 'normal(0.6, 0.2)'
 }
 
-# PC-CR
-# random seed = 0
-netParams.connParams['PYR->ISin'] = {
+# -------------------- PC-CR AMPAin --------------------
+netParams.connParams['PYR->ISin-AMPAin'] = {
         'preConds': {'pop': 'PYR_pop'},
         'postConds': {'pop': 'ISin_pop'},
         'sec': 'dend_0',
-        'synMech': ['AMPAIN', 'NMDA'],
-        # 'weight': [list(repeat(ampaweightcr, maxsyn6)), list(repeat(nmdaweightcr, maxsyn6))],
-        'weight': [ampaweightcr, nmdaweightcr],
+        'synMech': 'AMPAIN',
+        'weight': ampaweightcr,
         'synsPerConn': maxsyn6,
-        # 'delay': [5, 5],
-        # 'delay': [list(repeat(random.gauss(0.6, 0.2), maxsyn6)), list(repeat(random.gauss(0.6, 0.2), maxsyn6))]
-        # 'delay': ['normal(0.6, 0.2)', 'normal(0.6, 0.2)']
-        'delay': [ampain_delay, nmdain_delay]
+        'delay': 'normal(0.6, 0.2)'
+}
+# -------------------- PC-CR NMDA --------------------
+netParams.connParams['PYR->ISin-NMDA'] = {
+        'preConds': {'pop': 'PYR_pop'},
+        'postConds': {'pop': 'ISin_pop'},
+        'sec': 'dend_0',
+        'synMech': 'NMDA',
+        'weight': nmdaweightcr,
+        'synsPerConn': maxsyn6,
+        'delay': 'normal(0.6, 0.2)'
 }
 
-# CR-CB
-# random seed = 0
-gabaa_delay = random.gauss(1.8, 0.8)
+# -------------------- CR-CB --------------------
 netParams.connParams['ISin->RSin'] = {
         'preConds': {'pop': 'ISin_pop'},
         'postConds': {'pop': 'RSin_pop'},
         'sec': 'dend',
-        'synMech': ['GABAA'],
-        # 'weight': list(repeat(gabaweightcrcb, maxsyn7)),
+        'synMech': 'GABAA',
         'weight': gabaweightcrcb,
         'synsPerConn': maxsyn7,
-        # 'delay': [5],
-        # 'delay': list(repeat(random.gauss(1.8, 0.8), maxsyn7))
         'delay': 'normal(1.8, 0.8)'
-        # 'delay': gabaa_delay
 }
 
-# CB-PC
-# random seed = 0
+# -------------------- CB-PC --------------------
 netParams.connParams['RSin->PYR'] = {
         'preConds': {'pop': 'RSin_pop'},
         'postConds': {'pop': 'PYR_pop'},
         'sec': 'dend_2',
-        'synMech': ['GABAA'],
-        # 'weight': list(repeat(gabaweightcb, maxsyn8)),
+        'synMech': 'GABAA',
         'weight': gabaweightcb,
         'synsPerConn': maxsyn8,
-        # 'delay': [5],
-        # 'delay': list(repeat(random.gauss(1.8, 0.8), maxsyn8))
         'delay': 'normal(1.8, 0.8)'
-        # 'delay': gabaa_delay
 }
 
-# CR-PC
-# random seed = 0
+# -------------------- CR-PC --------------------
 netParams.connParams['ISin->PYR'] = {
         'preConds': {'pop': 'ISin_pop'},
         'postConds': {'pop': 'PYR_pop'},
         'sec': 'dend_2',
-        'synMech': ['GABAA'],
-        # 'weight': list(repeat(gabaweightcr, maxsyn9)),
+        'synMech': 'GABAA',
         'weight': gabaweightcr,
         'synsPerConn': maxsyn9,
-        # 'delay': [5],
-        # 'delay': list(repeat(random.gauss(1.8, 0.8), maxsyn9))
         'delay': 'normal(1.8, 0.8)'
-        # 'delay': gabaa_delay
 }
 
 netParams.stimSourceParams['ns1'] = {
@@ -304,7 +303,8 @@ netParams.stimTargetParams['nc2'] = {
         'sec': 'dend_1',
         'loc': 'uniform(0,1)'
 }
-
+# simConfig.hParams['celsius'] = 5
+# simConfig.allowSelfConns = True
 simConfig.duration = 1000
 simConfig.dt = 0.025
 simConfig.verbose = False
@@ -315,6 +315,3 @@ simConfig.analysis['plotRaster'] = {'orderInverse': True, 'saveFig': 'output/ras
 simConfig.analysis['plotTraces'] = {'include': ['PYR_pop', 'FSin_pop', 'RSin_pop', 'ISin_pop'], 'saveFig': 'output/traces.png'}
 
 sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)
-
-# sa = sim.analysis
-# sa.plotTraces()
