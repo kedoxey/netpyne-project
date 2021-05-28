@@ -2,6 +2,9 @@ from netpyne import specs
 
 cfg = specs.SimConfig()
 
+# GABA gain
+cfg.GABAgain = 1.0
+
 # weights
 cfg.ampaweightpr = 0.00008
 cfg.ampaweight = 0.000065
@@ -42,10 +45,11 @@ cfg.duration = 1000
 cfg.dt = 0.025
 cfg.verbose = False
 cfg.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}}
-cfg.recordStep = 1
+# cfg.recordStep = 1
 cfg.saveJson = True
 cfg.analysis['plotRaster'] = {'orderInverse': True, 'saveFig': True}
-cfg.analysis['plotTraces'] = {'include': ['PYR_pop', 'FSin_pop', 'RSin_pop', 'ISin_pop'], 'saveFig': True}
-cfg.analysis['plotConn'] = {'groupBy': 'cell', 'feature': 'numConns', 'saveFig': True}
+cfg.analysis['plotTraces'] = {'include': [0, 16, 18, 19], 'overlay': False, 'saveFig': True}
+cfg.analysis['plotSpikeHist'] = {'saveFig': True}
+cfg.analysis['plotConn'] = {'groupBy': 'cell', 'feature': 'weight', 'saveFig': True}
 
 cfg.saveDataInclude = ['simData']

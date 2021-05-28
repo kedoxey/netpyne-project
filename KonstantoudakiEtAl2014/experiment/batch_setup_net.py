@@ -128,7 +128,7 @@ netParams.connParams['FSin->PYR-GABAa'] = {
         'postConds': {'pop': 'PYR_pop'},
         'sec': 'soma',
         'synMech': 'GABAA',
-        'weight': cfg.gabaweight,
+        'weight': cfg.gabaweight*cfg.GABAgain,
         'synsPerConn': maxsyn3,
         'delay': cfg.delayInPcGABAa
 }
@@ -138,7 +138,7 @@ netParams.connParams['FSin->PYR-GABAb'] = {
         'postConds': {'pop': 'PYR_pop'},
         'sec': 'soma',
         'synMech': 'GABAB',
-        'weight': cfg.gabaweightb,
+        'weight': cfg.gabaweightb*cfg.GABAgain,
         'synsPerConn': maxsyn3,
         'delay': cfg.delayInPcGABAb
 }
@@ -149,7 +149,7 @@ netParams.connParams['FSin->PYR-GABAa'] = {
         'postConds': {'pop': 'PYR_pop'},
         'sec': 'dend_1',
         'synMech': 'GABAA',
-        'weight': cfg.gabaweight,
+        'weight': cfg.gabaweight*cfg.GABAgain,
         'synsPerConn': maxsyn4,
         'delay': cfg.delayInPcGABAa
 }
@@ -159,7 +159,7 @@ netParams.connParams['FSin->PYR-GABAb'] = {
         'postConds': {'pop': 'PYR_pop'},
         'sec': 'dend_1',
         'synMech': 'GABAB',
-        'weight': cfg.gabaweightb,
+        'weight': cfg.gabaweightb*cfg.GABAgain,
         'synsPerConn': maxsyn4,
         'delay': cfg.delayInPcGABAb
 }
@@ -206,35 +206,65 @@ netParams.connParams['PYR->ISin-NMDA'] = {
         'delay': cfg.delayPcCrNMDA
 }
 
-# -------------------- CR-CB --------------------
+# -------------------- CR-CB GABAa --------------------
 netParams.connParams['ISin->RSin'] = {
         'preConds': {'pop': 'ISin_pop'},
         'postConds': {'pop': 'RSin_pop'},
         'sec': 'dend',
         'synMech': 'GABAA',
-        'weight': cfg.gabaweightcrcb,
+        'weight': cfg.gabaweightcrcb*cfg.GABAgain,
+        'synsPerConn': maxsyn7,
+        'delay': cfg.delayCrCbGABAa
+}
+# -------------------- CR-CB GABAb --------------------
+netParams.connParams['ISin->RSin'] = {
+        'preConds': {'pop': 'ISin_pop'},
+        'postConds': {'pop': 'RSin_pop'},
+        'sec': 'dend',
+        'synMech': 'GABAB',
+        'weight': cfg.gabaweightcrcb*0.35*cfg.GABAgain,
         'synsPerConn': maxsyn7,
         'delay': cfg.delayCrCbGABAa
 }
 
-# -------------------- CB-PC --------------------
+# -------------------- CB-PC GABAa --------------------
 netParams.connParams['RSin->PYR'] = {
         'preConds': {'pop': 'RSin_pop'},
         'postConds': {'pop': 'PYR_pop'},
         'sec': 'dend_2',
         'synMech': 'GABAA',
-        'weight': cfg.gabaweightcb,
+        'weight': cfg.gabaweightcb*cfg.GABAgain,
+        'synsPerConn': maxsyn8,
+        'delay': cfg.delayCbPcGABAa
+}
+# -------------------- CB-PC GABAb --------------------
+netParams.connParams['RSin->PYR'] = {
+        'preConds': {'pop': 'RSin_pop'},
+        'postConds': {'pop': 'PYR_pop'},
+        'sec': 'dend_2',
+        'synMech': 'GABAb',
+        'weight': cfg.gabaweightcb*0.35*cfg.GABAgain,
         'synsPerConn': maxsyn8,
         'delay': cfg.delayCbPcGABAa
 }
 
-# -------------------- CR-PC --------------------
+# -------------------- CR-PC GABAa --------------------
 netParams.connParams['ISin->PYR'] = {
         'preConds': {'pop': 'ISin_pop'},
         'postConds': {'pop': 'PYR_pop'},
         'sec': 'dend_2',
         'synMech': 'GABAA',
-        'weight': cfg.gabaweightcr,
+        'weight': cfg.gabaweightcr*cfg.GABAgain,
+        'synsPerConn': maxsyn9,
+        'delay': cfg.delayCrPcGABAa
+}
+# -------------------- CR-PC GABAb --------------------
+netParams.connParams['ISin->PYR'] = {
+        'preConds': {'pop': 'ISin_pop'},
+        'postConds': {'pop': 'PYR_pop'},
+        'sec': 'dend_2',
+        'synMech': 'GABAB',
+        'weight': cfg.gabaweightcr*0.35*cfg.GABAgain,
         'synsPerConn': maxsyn9,
         'delay': cfg.delayCrPcGABAa
 }
