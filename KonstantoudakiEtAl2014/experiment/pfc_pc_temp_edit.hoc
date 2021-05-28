@@ -1,0 +1,332 @@
+/* 4-compartment model of a deep layer PFC pyramidal cell */
+/* based on Durstewitz et al. (2000), J.Neurophysiol. 83: 1733-50 updated by K. Sidiropoulou, 05/2014*/
+
+begintemplate Pcell
+
+public soma, dend, axon
+
+create 	soma,dend[3], axon  //dend[0]=basal, dend[1]=proximal, dend[2]=distal
+
+proc init() {
+
+ndend = 3
+create soma, dend[ndend], axon
+
+soma{
+	nseg=3
+	L=86.3
+	diam=10.14  
+	
+
+	insert pas
+     	cm = 1.2         /* microF/cm2 */
+	g_pas = 9e-5   /* mho/cm2 */    
+	e_pas = -65
+	Ra = 150         /* ohm-cm */
+
+//conductances
+
+soma_naf = 0.0018
+soma_kdr = 0.0000054 
+soma_nap = 0.0000018
+soma_kad = 0.0007
+soma_Kslow = 0.0006
+soma_can = 0.00002
+soma_cat = 0.000006
+soma_car = 0.000009
+soma_cal = 0.00003
+soma_kca = 0.14
+fast_kca = 0.0022   
+soma_h = 0.0000072    
+
+soma_calc = 0.00001
+ican_soma=0.001*0.07*0
+ican_dend=ican_soma*0.1*0
+
+	insert Naf
+	gnafbar_Naf = soma_naf*100.5   
+
+	insert Nap
+	gnapbar_Nap = soma_nap
+
+	insert calc
+	gcabar_calc = soma_calc 
+
+	insert cal
+	gcalbar_cal = soma_cal
+
+	insert can
+	gcabar_can = soma_can
+
+	insert car
+	gcabar_car = soma_car*3.3333334
+
+	insert cat
+	gcatbar_cat = soma_cat	
+
+	insert kdr
+	gkdrbar_kdr = soma_kdr*4000
+
+	insert IKs
+	gKsbar_IKs = soma_Kslow*1.71	
+
+	insert kad
+	gkabar_kad = soma_kad
+
+	insert iC
+	gkcbar_iC = fast_kca
+
+	insert h
+	gbar_h = soma_h
+	
+	insert kca
+	gbar_kca = soma_kca
+
+	insert ican
+	gbar_ican=ican_soma  
+
+	insert cadyn
+}
+
+//Dendritic_factors
+
+dend[0]{
+//basal dendrites
+	nseg=9
+	L=150.0
+	diam=1 
+
+
+	insert pas
+     	cm = 1.2*2         /* microF/cm2 */
+	g_pas = 8.5e-5*2   /* mho/cm2 */    
+	e_pas = -65
+	Ra = 150           /* ohm-cm */
+
+	insert Naf
+	gnafbar_Naf = soma_naf
+
+	insert Nap
+	gnapbar_Nap = soma_nap*10
+
+	insert calc
+	gcabar_calc = soma_calc
+        
+        insert cal
+	gcalbar_cal = soma_cal*0.001
+
+        insert can
+	gcabar_can = soma_can*3
+
+	insert car
+	gcabar_car = soma_car*0.001
+
+	insert cat
+	gcatbar_cat = soma_cat*0.001
+
+	insert kdr
+	gkdrbara_kdr = soma_kdr*1000 
+
+	insert IKs
+	gKsbar_IKs = soma_Kslow
+	
+	insert kad
+	gkabar_kad = soma_kad
+
+	insert iC
+	gkcbar_iC = fast_kca*0.0001
+
+	insert kca  
+	gbar_kca = soma_kca*0.0001
+
+	insert h
+	gbar_h =soma_h*1.25
+
+	insert ican
+	gbar_ican=ican_dend
+
+	insert cadyn
+}
+
+dend[1]{
+//proximal dendrites
+	nseg=17   
+	L=400.0
+        diam=2.6
+
+	
+	insert pas
+      	cm = 1.2*2        /* microF/cm2 */
+	g_pas = 8.5e-5*2  /* mho/cm2 */  
+	e_pas = -65
+	Ra = 150          /* ohm-cm */
+
+	insert Naf
+	gnafbar_Naf = soma_naf*2.8
+
+	insert Nap
+	gnapbar_Nap = soma_nap*30
+
+	insert calc
+	gcabar_calc = soma_calc  
+
+	insert cal
+	gcalbar_cal = soma_cal*6.5
+
+	insert can
+	gcabar_can = soma_can*3 
+
+	insert car
+	gcabar_car = soma_car  
+
+	insert cat
+	gcatbar_cat = soma_cat*10
+
+	insert kdr
+	gkdrbar_kdr = soma_kdr*4
+
+	insert IKs
+	gKsbar_IKs = soma_Kslow*2
+
+	insert kad
+	gkabar_kad = soma_kad*0.1
+
+	insert iC
+	gkcbar_iC = fast_kca*0.01
+
+	insert kca
+	gbar_kca = soma_kca*0.02
+
+	insert h
+	gbar_h =soma_h*2
+
+	insert ican
+	gbar_ican=ican_dend
+
+	insert cadyn
+}
+
+dend[2]{
+	nseg=5
+	L=400
+	diam=2.6
+      
+	
+	insert pas
+      	cm = 1.2*2         /* microF/cm2 */
+	g_pas = 8.5e-5*2   /* mho/cm2 */    
+	e_pas = -65
+	Ra = 150           /* ohm-cm */
+ 
+	insert Naf	
+	gnafbar_Naf = soma_naf*2
+
+        insert Nap
+        gnapbar_Nap = soma_nap*100
+
+	insert calc
+	gcabar_calc = soma_calc*0.3
+
+	insert cal
+	gcabar_cal = soma_cal*0.1
+
+	insert can
+	gcabar_can = soma_can*50
+
+	insert car
+	gcabar_car = soma_car*6.6666   
+
+	insert cat
+	gcatbar_cat = soma_cat	
+
+	insert kdr	
+	gkdrbar_kdr = soma_kdr  
+
+	insert IKs	
+	gKsbar_IKs = soma_Kslow*2 
+
+	insert kad
+	gkabar_kad = soma_kad*0.1 
+
+	insert iC	
+	gkcbar_iC = fast_kca*0.001
+	
+	insert h
+	gbar_h =soma_h*12.5
+
+	insert ican
+	gbar_ican=ican_dend
+
+	insert cadyn
+}
+	
+axon {
+	nseg=1
+	L=113.22
+	diam=1.1
+
+	//insert kdyn	
+	insert pas
+      	cm = 1.2         /* microF/cm2 */
+	g_pas = 8.5e-5   /* mho/cm2 */    
+	e_pas = -65
+	Ra = 150         /* ohm-cm */
+
+	insert Naf
+	gnafbar_Naf=soma_naf*100
+
+	insert kdr
+	gkdrbar_kdr=soma_kdr*1000
+}
+
+connect dend[0](0), soma(0)
+connect dend[1](0), soma(1)
+connect dend[2](0), dend[1](1)
+connect axon(0), soma(0.5)
+
+cao0_ca_ion = 2 	/* mM */
+cai0_ca_ion = 50e-6  	/* mM */
+ko0_k_ion = 3.82 	/* mM */
+ki0_k_ion = 140   	/* mM */
+celsius   = 23
+}
+
+init()
+
+endtemplate Pcell
+
+//Creating new neurons
+nPcells = 16//9
+objref Pcells[nPcells]
+
+for i = 0, (nPcells-1) {
+Pcells[i] = new Pcell()
+}
+
+//Create a list with segments
+objref soma_list, dend_list, pcell_list, cell0_list
+
+soma_list = new SectionList()
+for i=0, (nPcells-1) {
+Pcells[i].soma soma_list.append()
+}
+
+dend_list = new SectionList()
+for i=0, (nPcells-1) {Pcells[i].dend[0] dend_list.append()}
+for i=0, (nPcells-1) {Pcells[i].dend[1] dend_list.append()}
+for i=0, (nPcells-1) {Pcells[i].dend[2] dend_list.append()}
+
+pcell_list = new SectionList()
+for i=0, (nPcells-1) {Pcells[i].soma pcell_list.append()}
+for i=0, (nPcells-1) {Pcells[i].dend[0] pcell_list.append()}
+for i=0, (nPcells-1) {Pcells[i].dend[1] pcell_list.append()}
+for i=0, (nPcells-1) {Pcells[i].dend[2] pcell_list.append()}
+
+cell0_list=new SectionList()
+Pcells[0].soma cell0_list.append()
+Pcells[0].dend[0] cell0_list.append()
+Pcells[0].dend[1] cell0_list.append()
+Pcells[0].dend[2] cell0_list.append()
+
+xopen("../bash_templates/current-balance.hoc")
+current_balance(-65)

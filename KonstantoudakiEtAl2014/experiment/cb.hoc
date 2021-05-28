@@ -26,7 +26,7 @@ soma {
 	insert pas
 	cm=1.2            //microF/cm2
 	g_pas =1/40000
-	e_pas = v_initcb
+	e_pas = -64
 	v_initcb= -64
 	Ra=150 
 

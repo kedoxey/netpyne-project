@@ -14,11 +14,11 @@ proc init () {
 
 create soma, axon, dend
 
-soma_nafin=0.045  
-soma_kdrin=0.018  
+soma_nafin=0.135  
+soma_kdrin=0.036  
 soma_Kslowin=0.000725*0.1
 soma_hin=0.00001
-soma_kapin=0.0032*15  
+soma_kapin=0.0032  
 soma_canin=0.0003
 soma_kctin=0.0001
 
@@ -30,7 +30,7 @@ soma {
 	insert pas
 	cm=1.2            //microF/cm2
 	g_pas =1/10000    //mho/cm2   
-	e_pas = v_initin   //(Kawaguchi k Kubota, 1993 --> -73+-3.9)
+	e_pas = -73   //(Kawaguchi k Kubota, 1993 --> -73+-3.9)
 	v_initin= -73
 	Ra=150 
 
