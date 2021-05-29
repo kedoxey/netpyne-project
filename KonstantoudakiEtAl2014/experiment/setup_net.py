@@ -1,4 +1,13 @@
+import os
 from netpyne import specs, sim
+
+# GABA gain
+GABAAgain = 1
+GABABgain = 1
+
+# GABA synsPerConn
+GABAAsynsPerConn = 0
+GABABsynsPerConn = 0
 
 # weight params
 ampaweightpr = 0.00008
@@ -33,7 +42,7 @@ maxsyn9 = 10            # CR-PC
 
 # number of cells
 pcells = 16
-fscells = 2
+fscells = 124
 rscells = 1
 iscells = 1
 
@@ -58,6 +67,7 @@ netParams.importCellParams(
         fileName='incell.hoc',
         cellName='INcell',
         importSynMechs=True)
+# netParams.cellParams.FSin.secs.soma.mechs.pas.e = -73
 
 netParams.importCellParams(
         label='RSin',
@@ -65,6 +75,7 @@ netParams.importCellParams(
         fileName='cb.hoc',
         cellName='CBcell',
         importSynMechs=True)
+# netParams.cellParams.RSin.secs.soma.mechs.pas.e = -64
 
 netParams.importCellParams(
         label='ISin',
@@ -72,6 +83,7 @@ netParams.importCellParams(
         fileName='cr.hoc',
         cellName='CRcell',
         importSynMechs=True)
+# netParams.cellParams.ISin.secs.soma.mechs.pas.e = -70
 
 print(netParams.cellParams.keys())
 
@@ -144,8 +156,8 @@ netParams.connParams['FSin->PYR-GABAa'] = {
         'postConds': {'pop': 'PYR_pop'},
         'sec': 'soma',
         'synMech': 'GABAA',
-        'weight': gabaweight,
-        'synsPerConn': maxsyn3,
+        'weight': gabaweight * GABAAgain,
+        'synsPerConn': maxsyn3+GABAAsynsPerConn,
         'delay': 'normal(1.8, 0.8)'
 }
 # -------------------- IN-PC soma GABAb --------------------
@@ -154,8 +166,8 @@ netParams.connParams['FSin->PYR-GABAb'] = {
         'postConds': {'pop': 'PYR_pop'},
         'sec': 'soma',
         'synMech': 'GABAB',
-        'weight': gabaweightb,
-        'synsPerConn': maxsyn3,
+        'weight': gabaweightb * GABABgain,
+        'synsPerConn': maxsyn3+GABABsynsPerConn,
         'delay': 'normal(1.8, 0.8)'
 }
 
@@ -165,8 +177,8 @@ netParams.connParams['FSin->PYR-GABAa'] = {
         'postConds': {'pop': 'PYR_pop'},
         'sec': 'dend_1',
         'synMech': 'GABAA',
-        'weight': gabaweight,
-        'synsPerConn': maxsyn4,
+        'weight': gabaweight * GABAAgain,
+        'synsPerConn': maxsyn4+GABAAsynsPerConn,
         'delay': 'normal(1.8, 0.8)'
 }
 # -------------------- IN-PC dend1 GABAb --------------------
@@ -175,8 +187,8 @@ netParams.connParams['FSin->PYR-GABAb'] = {
         'postConds': {'pop': 'PYR_pop'},
         'sec': 'dend_1',
         'synMech': 'GABAB',
-        'weight': gabaweightb,
-        'synsPerConn': maxsyn4,
+        'weight': gabaweightb * GABABgain,
+        'synsPerConn': maxsyn4+GABABsynsPerConn,
         'delay': 'normal(1.8, 0.8)'
 }
 
@@ -222,40 +234,70 @@ netParams.connParams['PYR->ISin-NMDA'] = {
         'delay': 'normal(0.6, 0.2)'
 }
 
-# -------------------- CR-CB --------------------
+# -------------------- CR-CB GABAa --------------------
 netParams.connParams['ISin->RSin'] = {
         'preConds': {'pop': 'ISin_pop'},
         'postConds': {'pop': 'RSin_pop'},
         'sec': 'dend',
         'synMech': 'GABAA',
-        'weight': gabaweightcrcb,
-        'synsPerConn': maxsyn7,
+        'weight': gabaweightcrcb * GABAAgain,
+        'synsPerConn': maxsyn7+GABAAsynsPerConn,
+        'delay': 'normal(1.8, 0.8)'
+}
+# -------------------- CR-CB GABAb --------------------
+netParams.connParams['ISin->RSin'] = {
+        'preConds': {'pop': 'ISin_pop'},
+        'postConds': {'pop': 'RSin_pop'},
+        'sec': 'dend',
+        'synMech': 'GABAB',
+        'weight': gabaweightcrcb * 0.35 * GABABgain,
+        'synsPerConn': maxsyn7+GABABsynsPerConn,
         'delay': 'normal(1.8, 0.8)'
 }
 
-# -------------------- CB-PC --------------------
+# -------------------- CB-PC GABAa --------------------
 netParams.connParams['RSin->PYR'] = {
         'preConds': {'pop': 'RSin_pop'},
         'postConds': {'pop': 'PYR_pop'},
         'sec': 'dend_2',
         'synMech': 'GABAA',
-        'weight': gabaweightcb,
-        'synsPerConn': maxsyn8,
+        'weight': gabaweightcb * GABAAgain,
+        'synsPerConn': maxsyn8+GABAAsynsPerConn,
+        'delay': 'normal(1.8, 0.8)'
+}
+# -------------------- CB-PC GABAb --------------------
+netParams.connParams['RSin->PYR'] = {
+        'preConds': {'pop': 'RSin_pop'},
+        'postConds': {'pop': 'PYR_pop'},
+        'sec': 'dend_2',
+        'synMech': 'GABAB',
+        'weight': gabaweightcb * 0.35 * GABABgain,
+        'synsPerConn': maxsyn8+GABABsynsPerConn,
         'delay': 'normal(1.8, 0.8)'
 }
 
-# -------------------- CR-PC --------------------
+# -------------------- CR-PC GABAa --------------------
 netParams.connParams['ISin->PYR'] = {
         'preConds': {'pop': 'ISin_pop'},
         'postConds': {'pop': 'PYR_pop'},
         'sec': 'dend_2',
         'synMech': 'GABAA',
-        'weight': gabaweightcr,
-        'synsPerConn': maxsyn9,
+        'weight': gabaweightcr * GABAAgain,
+        'synsPerConn': maxsyn9+GABAAsynsPerConn,
+        'delay': 'normal(1.8, 0.8)'
+}
+# -------------------- CR-PC GABAb --------------------
+netParams.connParams['ISin->PYR'] = {
+        'preConds': {'pop': 'ISin_pop'},
+        'postConds': {'pop': 'PYR_pop'},
+        'sec': 'dend_2',
+        'synMech': 'GABAB',
+        'weight': gabaweightcr * 0.35 * GABABgain,
+        'synsPerConn': maxsyn9+GABABsynsPerConn,
         'delay': 'normal(1.8, 0.8)'
 }
 
-for gid in range(0, 16):
+for gid in range(0, pcells+fscells+rscells+iscells):
         netParams.stimSourceParams[f'noise_source-{gid}'] = {
                 'type': 'NetStim',
                 'rate': 100,
@@ -301,16 +343,22 @@ netParams.stimTargetParams['nc2'] = {
         'loc': 'uniform(0,1)'
 }
 
+if not os.path.isdir(f'output-{fscells}'):
+        os.mkdir(f'output-{fscells}')
+
 simConfig.hParams['celsius'] = 34
 simConfig.allowSelfConns = False
 simConfig.duration = 1000
 simConfig.dt = 0.025
 simConfig.verbose = False
 simConfig.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}}
-simConfig.recordStep = 1
+# simConfig.recordStep = 1
 simConfig.savePickle = False
-simConfig.analysis['plotRaster'] = {'orderInverse': True, 'saveFig': 'output/raster.png'}
-simConfig.analysis['plotTraces'] = {'include': ['PYR_pop', 'FSin_pop', 'RSin_pop', 'ISin_pop'], 'saveFig': 'output/traces.png'}
-simConfig.analysis['plotConn'] = {'groupBy': 'cell', 'feature': 'numConns', 'saveFig': 'output/conns.png'}
+simConfig.analysis['plotRaster'] = {'orderInverse': True, 'saveFig': f'output-{fscells}/raster.png'}
+simConfig.analysis['plotTraces'] = {'include': [('PYR_pop', [0]), ('FSin_pop', [0]), ('RSin_pop', [0]), ('ISin_pop', [0])],
+                                    'oneFigPer': 'trace', 'overlay': False, 'saveFig': f'output-{fscells}/trace.png'}
+simConfig.analysis['plotSpikeHist'] = {'saveFig': f'output-{fscells}/spike-hist.png'}
+simConfig.analysis['plotSpikeStats'] = {'saveFig': f'output-{fscells}/spike-stats.png'}
+simConfig.analysis['plotConn'] = {'groupBy': 'cell', 'feature': 'weight', 'saveFig': f'output-{fscells}/conn.png'}
 
 sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)
