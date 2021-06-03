@@ -37,7 +37,7 @@ fscells = 2
 rscells = 1
 iscells = 1
 
-netParams = specs.NetParams()  # object of class NetParams to store the network parameters
+netParams = specs.NetParams()
 simConfig = specs.SimConfig()
 
 netParams.popParams['PYR_pop'] = {'cellModel': 'PYR_cell', 'cellType': 'PYR',  'numCells': pcells}
@@ -72,8 +72,6 @@ netParams.importCellParams(
         fileName='cr.hoc',
         cellName='CRcell',
         importSynMechs=True)
-
-print(netParams.cellParams.keys())
 
 netParams.synMechParams['AMPA'] = {'mod': 'GLU'}
 netParams.synMechParams['AMPAIN'] = {'mod': 'GLUIN'}
@@ -222,7 +220,7 @@ netParams.connParams['PYR->ISin-NMDA'] = {
         'delay': 'normal(0.6, 0.2)'
 }
 
-# -------------------- CR-CB --------------------
+# -------------------- CR-CB GABAa --------------------
 netParams.connParams['ISin->RSin'] = {
         'preConds': {'pop': 'ISin_pop'},
         'postConds': {'pop': 'RSin_pop'},
@@ -233,7 +231,7 @@ netParams.connParams['ISin->RSin'] = {
         'delay': 'normal(1.8, 0.8)'
 }
 
-# -------------------- CB-PC --------------------
+# -------------------- CB-PC GABAa --------------------
 netParams.connParams['RSin->PYR'] = {
         'preConds': {'pop': 'RSin_pop'},
         'postConds': {'pop': 'PYR_pop'},
@@ -244,7 +242,7 @@ netParams.connParams['RSin->PYR'] = {
         'delay': 'normal(1.8, 0.8)'
 }
 
-# -------------------- CR-PC --------------------
+# -------------------- CR-PC GABAa --------------------
 netParams.connParams['ISin->PYR'] = {
         'preConds': {'pop': 'ISin_pop'},
         'postConds': {'pop': 'PYR_pop'},
@@ -255,7 +253,8 @@ netParams.connParams['ISin->PYR'] = {
         'delay': 'normal(1.8, 0.8)'
 }
 
-for gid in range(0, 16):
+# noise
+for gid in range(0, pcells+fscells+rscells+iscells):
         netParams.stimSourceParams[f'noise_source-{gid}'] = {
                 'type': 'NetStim',
                 'rate': 100,
@@ -273,6 +272,7 @@ for gid in range(0, 16):
                 'loc': 'uniform(0, 1)'
         }
 
+# initial stimulus
 netParams.stimSourceParams['ns1'] = {
         'type': 'NetStim',
         'interval': 50,
@@ -307,10 +307,15 @@ simConfig.duration = 1000
 simConfig.dt = 0.025
 simConfig.verbose = False
 simConfig.recordTraces = {'V_soma': {'sec': 'soma', 'loc': 0.5, 'var': 'v'}}
-simConfig.recordStep = 1
+# simConfig.recordStep = 1
 simConfig.savePickle = False
-simConfig.analysis['plotRaster'] = {'orderInverse': True, 'saveFig': 'output/raster.png'}
-simConfig.analysis['plotTraces'] = {'include': ['PYR_pop', 'FSin_pop', 'RSin_pop', 'ISin_pop'], 'saveFig': 'output/traces.png'}
-simConfig.analysis['plotConn'] = {'groupBy': 'cell', 'feature': 'numConns', 'saveFig': 'output/conns.png'}
+simConfig.saveJson = True
+simConfig.analysis['plotRaster'] = {'orderInverse': True, 'saveFig': f'output/raster.png'}
+simConfig.analysis['plotTraces'] = {'include': [('PYR_pop', [0]), ('FSin_pop', [0]), ('RSin_pop', [0]), ('ISin_pop', [0])],
+                                    'oneFigPer': 'trace', 'overlay': False, 'saveFig': f'output/trace.png'}
+simConfig.analysis['plotSpikeHist'] = {'saveFig': f'output/spike-hist.png'}
+simConfig.analysis['plotSpikeStats'] = {'saveFig': f'output/spike-stats.png'}
+simConfig.analysis['plotConn'] = {'groupBy': 'cell', 'feature': 'weight', 'saveFig': f'output/conn.png'}
+simConfig.analysis['plotShape'] = {'showSyns': True, 'saveFig': f'output/shape.png', 'saveData': True}
 
 sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)
